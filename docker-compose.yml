@@ -14,7 +14,7 @@ services:
     mem_limit: 512M
     depends_on:
       - config-server
-    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=discovery"
     ports:
@@ -27,7 +27,7 @@ services:
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=customers"
     ports:
@@ -40,7 +40,7 @@ services:
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=visits"
     ports:
@@ -53,7 +53,7 @@ services:
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=vets"
     ports:
@@ -66,7 +66,7 @@ services:
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=shopping"
     ports:
@@ -88,7 +88,7 @@ services:
     depends_on:
      - config-server
      - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/opentelemetry-javaagent-all.jar",  "-Dotel.otlp.endpoint=otel-collector:55680", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=240s","--","java", "-javaagent:/opt/signalfx-tracing.jar",  "-Dsignalfx.endpoint.url=http://tracing-server:9411/api/v2/spans", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     environment:
       OTEL_RESOURCE_ATTRIBUTES: "service.name=admin"
     ports:
@@ -120,6 +120,6 @@ services:
       - ./collector.yaml:/etc/otelcol-config.yaml
     ports:
       - "13133:13133" # health_check extension
-      - "55680:55680" # Jaeger gRPC
+      - "55680:55680" # Zipkin
       - "55679:55679" # zpages extension
 
