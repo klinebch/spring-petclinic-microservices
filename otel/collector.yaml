@@ -10,7 +10,6 @@ receivers:
 
 processors:
   batch:
-  queued_retry:
   attributes/newenvironment:
     actions:
     - key: environment
@@ -27,7 +26,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch, attributes/newenvironment, queued_retry]
+      processors: [batch, attributes/newenvironment]
       exporters: [logging, zipkin]
 
   extensions: [health_check, zpages]
