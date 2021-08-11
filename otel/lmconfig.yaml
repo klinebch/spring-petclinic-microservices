@@ -1,0 +1,63 @@
+receivers:
+  hostmetrics:
+    collection_interval: 5m
+    scrapers:
+      cpu:
+      disk:
+      filesystem:
+      memory:
+      network:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "US-West"
+          scrape_interval: 5m
+          static_configs:
+          - targets: ["0.0.0.0:8888"]
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4318"
+        endpoint: "0.0.0.0:55680"
+      http:
+        endpoint: "0.0.0.0:55681"
+  zipkin:
+    endpoint: "0.0.00:9411"
+processors:
+  batch:
+  memory_limiter:
+    check_interval: 60s
+    limit_mib: 200
+exporters:
+  lmexporter:
+    url: https://${LOGICMONITOR_ACCOUNT}.logicmonitor.com/rest/metric/ingest
+    #apitoken:
+    #  access_id: ${LOGICMONITOR_ACCESS_ID}
+    #  access_key: ${LOGICMONITOR_ACCESS_KEY}
+    headers:
+      x-logicmonitor-account: ${LOGICMONITOR_ACCOUNT}
+      Authorization: Bearer ${LOGICMONITOR_BEARER_TOKEN}
+  logging:
+    logLevel: debug
+  otlphttp:
+    endpoint: https://${LOGICMONITOR_ACCOUNT}.logicmonitor.com/rest/api
+    headers:
+      Authorization: Bearer ${LOGICMONITOR_BEARER_TOKEN}
+  file:
+    path: ./fileout.json
+extensions:
+  lmextension:
+    properties:
+       system.categories: lmotel
+  health_check:
+
+service:
+  extensions: [lmextension,health_check]
+  pipelines:
+    traces:
+      receivers : [ otlp ]
+      processors: [batch]
+      exporters : [otlphttp, logging]
+    metrics:
+      receivers: [prometheus, hostmetrics]
+      exporters: [lmexporter]

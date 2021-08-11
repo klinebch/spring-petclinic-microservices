@@ -5,82 +5,183 @@ services:
     image: springcommunity/spring-petclinic-config-server
     container_name: config-server
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=config-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
+    depends_on:
+      - tracing-server
     ports:
-     - 8888:8888
+      - 8888:8888
 
   discovery-server:
     image: springcommunity/spring-petclinic-discovery-server
     container_name: discovery-server
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=discovery-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
       - config-server
-    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-     - 8761:8761
+      - 8761:8761
 
   customers-service:
     image: springcommunity/spring-petclinic-customers-service
     container_name: customers-service
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=customers-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
-     - config-server
-     - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - config-server
+      - discovery-server
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-    - 8081:8081
+      - 8081:8081
 
   visits-service:
     image: springcommunity/spring-petclinic-visits-service
     container_name: visits-service
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=visits-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
-     - config-server
-     - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - config-server
+      - discovery-server
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-     - 8082:8082
+      - 8082:8082
 
   vets-service:
     image: springcommunity/spring-petclinic-vets-service
     container_name: vets-service
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=vets-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
-     - config-server
-     - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - config-server
+      - discovery-server
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-     - 8083:8083
+      - 8083:8083
 
   api-gateway:
     image: springcommunity/spring-petclinic-api-gateway
     container_name: api-gateway
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=api-gateway,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
-     - config-server
-     - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - config-server
+      - discovery-server
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-     - 8080:8080
+      - 8080:8080
+
+    #if you wanted to run a generic otel collector instead of lmotel
+    #tracing-server:
+    #image: otel/opentelemetry-collector
+    #container_name: tracing-server
+    #mem_limit: 512M
+    #volumes:
+    #  - ./otel:/otel
+    #depends_on:
+    #  - zipkin-server
+    #command: --config /otel/collector.yaml.orig
+    #ports:
+    #  - 55679:55679
+    #  - 55680:55680
 
   tracing-server:
-    image: openzipkin/zipkin
+    image: logicmonitor/lmotel
     container_name: tracing-server
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    command: sh -c "./container && cp /otel/lmconfig.yaml logicmonitor/lmotel/config.yaml && /logicmonitor/lmotel/lmotel --config logicmonitor/lmotel/config.yaml"
     environment:
-    - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
+      LOGICMONITOR_ACCOUNT: qauattraces01
+      LOGICMONITOR_BEARER_TOKEN: WUliTTY2NjVMS241bjk0MmJMZzI6MHpNWlZsN21SWmRlRzRaeTdSQ3NCQT09
+      LOGICMONITOR_OTEL_NAME: KlineTracing
     ports:
-     - 9411:9411
+      - 55680:55680
+      - 55681:55681
+      - 9411:9411
+
+  #zipkin-server:
+  #  image: openzipkin/zipkin
+  #  container_name: zipkin-server
+  #  mem_limit: 512M
+  #  environment:
+  #    - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
+  #  ports:
+  #    - 9411:9411
 
   admin-server:
     image: springcommunity/spring-petclinic-admin-server
     container_name: admin-server
     mem_limit: 512M
+    volumes:
+      - ./otel:/otel
+    environment:
+      JAVA_TOOL_OPTIONS: -javaagent:/otel/opentelemetry-javaagent-all.jar
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tracing-server:55680
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=petclinic,service.name=admin-server,resource.type=docker
+      OTEL.EXPORTER.OTLP.INSECURE: 'true'
     depends_on:
-     - config-server
-     - discovery-server
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+      - config-server
+      - discovery-server
+      - tracing-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=300s","--","java", "-jar","/app.jar"]
     ports:
-     - 9090:9090
+      - 9090:9090
 
   ## Grafana / Prometheus
 
@@ -89,11 +190,11 @@ services:
     container_name: grafana-server
     mem_limit: 256M
     ports:
-    - 3000:3000
+      - 3000:3000
 
   prometheus-server:
     build: ./docker/prometheus
     container_name: prometheus-server
     mem_limit: 256M
     ports:
-    - 9091:9090
+      - 9091:9090
