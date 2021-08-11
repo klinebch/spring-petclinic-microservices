@@ -145,9 +145,9 @@ services:
       - ./otel:/otel
     command: sh -c "./container && cp /otel/lmconfig.yaml logicmonitor/lmotel/config.yaml && /logicmonitor/lmotel/lmotel --config logicmonitor/lmotel/config.yaml"
     environment:
-      LOGICMONITOR_ACCOUNT: qauattraces01
-      LOGICMONITOR_BEARER_TOKEN: WUliTTY2NjVMS241bjk0MmJMZzI6MHpNWlZsN21SWmRlRzRaeTdSQ3NCQT09
-      LOGICMONITOR_OTEL_NAME: KlineTracing
+      LOGICMONITOR_ACCOUNT: ADDME
+      LOGICMONITOR_BEARER_TOKEN: ADDME
+      LOGICMONITOR_OTEL_NAME: ADDME
     ports:
       - 55680:55680
       - 55681:55681
