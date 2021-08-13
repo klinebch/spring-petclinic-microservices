@@ -16,3 +16,5 @@ target/
 
 # Branch switching
 generated/
+spring-petclinic-admin-server/.DS_Store
+.DS_Store

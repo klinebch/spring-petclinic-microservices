@@ -143,7 +143,7 @@ services:
     mem_limit: 512M
     volumes:
       - ./otel:/otel
-    command: sh -c "./container && cp /otel/lmconfig.yaml logicmonitor/lmotel/config.yaml && /logicmonitor/lmotel/lmotel --config logicmonitor/lmotel/config.yaml"
+    command: --log-level DEBUG  --config /otel/lmconfig.yaml --log-format json
     environment:
       LOGICMONITOR_ACCOUNT: ADDME
       LOGICMONITOR_BEARER_TOKEN: ADDME

@@ -35,7 +35,7 @@ After starting services it takes a while for API Gateway to be in sync with serv
 so don't be scared of initial Spring Cloud Gateway timeouts. You can track services availability using Eureka dashboard
 available by default at http://localhost:8761.
 
-Within the tracing-server declaration, be sure to update the following environment variables with the correct LM properties:
+Within the tracing-server declaration, be sure to update the following environment variables with the correct LM properties (search for ADDME to edit):
 * LOGICMONITOR_ACCOUNT
 * LOGICMONITOR_BEARER_TOKEN
 * LOGICMONITOR_OTEL_NAME
